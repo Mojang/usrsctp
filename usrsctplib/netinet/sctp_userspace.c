@@ -48,6 +48,23 @@
 /* Adapter to translate Unix thread start routines to Windows thread start
  * routines.
  */
+
+// NETHERNET: added to control thread priority and affinity
+static int sThreadPriority = THREAD_PRIORITY_NORMAL;
+void
+sctp_userspace_thread_set_priority(int threadPriority)
+{
+	sThreadPriority = threadPriority;
+}
+
+static unsigned __int64 sThreadAffinity = 0;
+void
+sctp_userspace_thread_set_affinity(unsigned __int64 affinity)
+{
+	sThreadAffinity = affinity;
+}
+
+
 #if defined(__MINGW32__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
@@ -65,6 +82,14 @@ sctp_userspace_thread_create(userland_thread_t *thread, start_routine_t start_ro
 			       (void *)start_routine, 0, NULL);
 	if (*thread == NULL)
 		return GetLastError();
+
+	// NETHERNET: added to control thread priority and affinity
+	SetThreadPriority(*thread, sThreadPriority);
+	if (sThreadAffinity != 0)
+	{
+		SetThreadAffinityMask(*thread, sThreadAffinity);
+	}
+
 	return 0;
 }
 
