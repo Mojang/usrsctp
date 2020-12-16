@@ -412,6 +412,11 @@ sctp_init_ifns_for_vrf(int vrfid)
 #endif
 }
 #elif defined(__Userspace__)
+
+// NETHERNET: added these two, not sure exactly now it links for android in chromium build
+extern int _getifaddrs(struct ifaddrs** result);
+extern void _freeifaddrs(struct ifaddrs* addrs);
+
 static void
 sctp_init_ifns_for_vrf(int vrfid)
 {
@@ -421,7 +426,7 @@ sctp_init_ifns_for_vrf(int vrfid)
 	struct sctp_ifa *sctp_ifa;
 	uint32_t ifa_flags;
 
-	rc = getifaddrs(&ifas);
+	rc = _getifaddrs(&ifas); // NETHERNET
 	if (rc != 0) {
 		return;
 	}
@@ -472,7 +477,7 @@ sctp_init_ifns_for_vrf(int vrfid)
 			sctp_ifa->localifa_flags &= ~SCTP_ADDR_DEFER_USE;
 		}
 	}
-	freeifaddrs(ifas);
+	_freeifaddrs(ifas); // NETHERNET:
 #endif
 }
 #endif
