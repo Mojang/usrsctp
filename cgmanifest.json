@@ -1,0 +1,14 @@
+{
+    "Registrations":[ 
+        {
+            "component": { 
+                "type": "git", 
+                "git": { 
+                "repositoryUrl": "https://github.com/sctplab/usrsctp.git", 
+                "commitHash": "2e754d58227f76b8d8c7358ee5f5770b78cc239a" 
+                }
+            }
+        }
+    ],
+    "Version": 1
+}
